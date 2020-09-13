@@ -1,13 +1,38 @@
 import React, { useEffect, useState, useRef } from "react";
-import { makeStyles, Typography, Button } from "@material-ui/core";
+import {
+    makeStyles,
+    Typography,
+    IconButton,
+    Toolbar,
+    AppBar,
+} from "@material-ui/core";
+import { PlayArrow, Pause } from "@material-ui/icons";
 import GameTable from "./GameTable";
+import { red, lightGreen } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
     main: {
         margin: "auto",
         //textAlign: "center",
     },
+    header: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    grow: {
+        flexGrow: 1,
+    },
+    appBar: {
+        backgroundColor: red[900],
+    },
 });
+
+const colors = {
+    snake: red[500],
+    apple: lightGreen[400],
+    grid: "lightgrey",
+};
 
 function GameScreen({ gameOver }) {
     const classes = useStyles();
@@ -33,8 +58,8 @@ function GameScreen({ gameOver }) {
             const snakeRow = [];
             for (let j = 0; j < width; j++) {
                 if (i === apple.current[0] && j === apple.current[1])
-                    row.push("lightgreen");
-                else row.push("lightgray");
+                    row.push(colors.apple);
+                else row.push(colors.grid);
                 snakeRow.push(0);
             }
             tempGrid.push(row);
@@ -98,7 +123,7 @@ function GameScreen({ gameOver }) {
                             --snakeGrid.current[i][j];
                             if (snakeGrid.current[i][j] === 0) {
                                 gridCopy[i] = [...oldGrid[i]]; //zmieniamy wskaznik do zmienionego wiersza tak, aby poinformowac Reacta o zmianie wartosci
-                                gridCopy[i][j] = "lightgray";
+                                gridCopy[i][j] = colors.grid;
                                 //setGrid(gridCopy);
                             }
                         }
@@ -139,7 +164,7 @@ function GameScreen({ gameOver }) {
                             ...gridCopy[apple.current[0]],
                         ];
                         gridCopy[apple.current[0]][apple.current[1]] =
-                            "lightgreen";
+                            colors.apple;
                     } else {
                         apple.current = [-1, -1];
                     }
@@ -148,7 +173,7 @@ function GameScreen({ gameOver }) {
                 //setCell(head.current[0], head.current[1], "red");
                 //const gridCopy = [...grid];
                 gridCopy[head.current[0]] = [...gridCopy[head.current[0]]]; //zmieniamy wskaznik do zmienionego wiersza tak, aby poinformowac Reacta o zmianie wartosci
-                gridCopy[head.current[0]][head.current[1]] = "red";
+                gridCopy[head.current[0]][head.current[1]] = colors.snake;
 
                 return gridCopy;
             });
@@ -159,16 +184,16 @@ function GameScreen({ gameOver }) {
         console.log(event.key);
         switch (event.key) {
             case "ArrowRight":
-                direction.current = 0;
+                if (direction.current !== 2) direction.current = 0;
                 break;
             case "ArrowUp":
-                direction.current = 1;
+                if (direction.current !== 3) direction.current = 1;
                 break;
             case "ArrowLeft":
-                direction.current = 2;
+                if (direction.current !== 0) direction.current = 2;
                 break;
             case "ArrowDown":
-                direction.current = 3;
+                if (direction.current !== 1) direction.current = 3;
                 break;
             case "p":
                 changePause();
@@ -185,11 +210,17 @@ function GameScreen({ gameOver }) {
 
     return (
         <div className={classes.main}>
-            <Button variant="contained" onClick={changePause}>
-                {pause === 1 ? "Wznów" : "Pauza"}
-            </Button>
-            <Typography>Twój wynik to: {snakeLength.current}</Typography>
-
+            <AppBar position="static" className={classes.appBar}>
+                <Toolbar className={classes.header}>
+                    <Typography variant="h6">
+                        Twój wynik to: {snakeLength.current}
+                    </Typography>
+                    <div className={classes.grow}></div>
+                    <IconButton onClick={changePause} color="inherit">
+                        {pause === 1 ? <PlayArrow /> : <Pause />}
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
             <GameTable grid={grid} />
         </div>
     );
