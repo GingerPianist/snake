@@ -43,7 +43,7 @@ function GameScreen({ gameOver }) {
     const head = useRef([0, 0]);
     const snakeGrid = useRef([]);
     const direction = useRef(0);
-    const snakeLength = useRef(3);
+    const snakeLength = useRef(4);
     const apple = useRef([0, 0]);
     const [pause, setPause] = useState(0); //0 - nie ma pauzy 1-jest pauza
 

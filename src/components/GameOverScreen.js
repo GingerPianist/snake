@@ -1,28 +1,28 @@
-import React from 'react'
-import { Typography, makeStyles, Button } from '@material-ui/core'
+import React from "react";
+import { Typography, makeStyles, Button } from "@material-ui/core";
 
 const useStyles = makeStyles({
     wrapper: {
-        width: '100vw',
-        height: '100vh',
+        width: "100vw",
+        height: "100vh",
 
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
     },
     main: {
-        margin: 'auto',
+        margin: "auto",
 
-        display: 'flex',
+        display: "flex",
         flexShrink: 1,
-        flexDirection: 'column',
+        flexDirection: "column",
     },
     title: {
-        color: 'red',
+        color: "red",
     },
-})
+});
 
-function GameOverScreen({ endGame }) {
-    const classes = useStyles()
+function GameOverScreen({ endGame, showRanking }) {
+    const classes = useStyles();
 
     return (
         <div className={classes.main}>
@@ -32,8 +32,11 @@ function GameOverScreen({ endGame }) {
             <Button variant="contained" onClick={endGame}>
                 Play again
             </Button>
+            <Button variant="contained" onClick={showRanking}>
+                Best scores
+            </Button>
         </div>
-    )
+    );
 }
 
-export default GameOverScreen
+export default GameOverScreen;
