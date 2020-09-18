@@ -34,6 +34,8 @@ function GameOverScreen({ score, endGame, showRanking }) {
         const ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
         ranking.push({ name: username, score });
         localStorage.setItem("ranking", JSON.stringify(ranking));
+
+        showRanking();
     };
 
     return (
