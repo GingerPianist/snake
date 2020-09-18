@@ -112,7 +112,7 @@ function GameScreen({ gameOver }) {
         head.current[1] %= width;
 
         if (snakeGrid.current[head.current[0]][head.current[1]] !== 0) {
-            gameOver();
+            gameOver(snakeLength.current);
         } else {
             setGrid((oldGrid) => {
                 const gridCopy = [...oldGrid];
@@ -181,7 +181,6 @@ function GameScreen({ gameOver }) {
     }
 
     function keyPress(event) {
-        console.log(event.key);
         switch (event.key) {
             case "ArrowRight":
                 if (direction.current !== 2) direction.current = 0;
@@ -213,7 +212,7 @@ function GameScreen({ gameOver }) {
             <AppBar position="static" className={classes.appBar}>
                 <Toolbar className={classes.header}>
                     <Typography variant="h6">
-                        Twój wynik to: {snakeLength.current}
+                        Your score is: {snakeLength.current}
                     </Typography>
                     <div className={classes.grow}></div>
                     <IconButton onClick={changePause} color="inherit">

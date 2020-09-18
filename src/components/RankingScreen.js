@@ -1,13 +1,27 @@
 import React from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import { Typography, makeStyles, CssBaseline, Button } from "@material-ui/core";
+import {
+    Typography,
+    makeStyles,
+    CssBaseline,
+    Button,
+    TableRow,
+    TableHead,
+    TableContainer,
+    Table,
+    TableCell,
+    TableBody,
+} from "@material-ui/core";
 
 function RankingScreen({ startGameAgain }) {
+    const dataTable = JSON.parse(localStorage.getItem("ranking") || "[]");
+    /*[
+        { name: "Adam", score: 75 },
+        { name: "Monika", score: 101 },
+        { name: "Zosia", score: 72 },
+    ];*/
+
+    dataTable.sort((a, b) => b.score - a.score);
+
     return (
         <div>
             <div align="center">
@@ -20,15 +34,19 @@ function RankingScreen({ startGameAgain }) {
                     <TableHead>
                         <TableRow>
                             <TableCell>Ranking</TableCell>
-                            <TableCell>Nazwa gracza</TableCell>
-                            <TableCell>Wynik</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell> Monika</TableCell>
-                            <TableCell> 101</TableCell>
+                            <TableCell>Username</TableCell>
+                            <TableCell>Best score</TableCell>
                         </TableRow>
                     </TableHead>
+                    <TableBody>
+                        {dataTable.map(({ name, score }) => (
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>{name}</TableCell>
+                                <TableCell>{score}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
                 </Table>
             </TableContainer>
         </div>

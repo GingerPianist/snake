@@ -1,5 +1,5 @@
-import React from "react";
-import { Typography, makeStyles, Button } from "@material-ui/core";
+import React, { useState } from "react";
+import { Typography, makeStyles, Button, TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
     wrapper: {
@@ -15,14 +15,26 @@ const useStyles = makeStyles({
         display: "flex",
         flexShrink: 1,
         flexDirection: "column",
+
+        textAlign: "center",
     },
     title: {
         color: "red",
     },
 });
 
-function GameOverScreen({ endGame, showRanking }) {
+function GameOverScreen({ score, endGame, showRanking }) {
     const classes = useStyles();
+    const [username, setUsername] = useState("");
+    const [showTextField, setShowTextField] = useState(true);
+
+    const saveScore = () => {
+        setShowTextField(false);
+
+        const ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
+        ranking.push({ name: username, score });
+        localStorage.setItem("ranking", JSON.stringify(ranking));
+    };
 
     return (
         <div className={classes.main}>
@@ -35,6 +47,18 @@ function GameOverScreen({ endGame, showRanking }) {
             <Button variant="contained" onClick={showRanking}>
                 Best scores
             </Button>
+
+            <Typography>Your score is {score}</Typography>
+
+            {showTextField && (
+                <TextField
+                    label="Your name"
+                    variant="outlined"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                    onKeyDown={(event) => event.key === "Enter" && saveScore()}
+                />
+            )}
         </div>
     );
 }
