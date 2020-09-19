@@ -5,6 +5,7 @@ import {
     IconButton,
     Toolbar,
     AppBar,
+    Tooltip,
 } from "@material-ui/core";
 import { PlayArrow, Pause } from "@material-ui/icons";
 import GameTable from "./GameTable";
@@ -34,7 +35,7 @@ const colors = {
     grid: "lightgrey",
 };
 
-function GameScreen({ gameOver }) {
+function GameScreen({ gameOver, snakeSpeed }) {
     const classes = useStyles();
     const height = 20;
     const width = 40;
@@ -70,7 +71,7 @@ function GameScreen({ gameOver }) {
 
     useEffect(() => {
         let handle;
-        if (pause === 0) handle = setInterval(gameTick, 200);
+        if (pause === 0) handle = setInterval(gameTick, snakeSpeed);
         document.addEventListener("keydown", keyPress);
 
         return () => {
@@ -215,9 +216,11 @@ function GameScreen({ gameOver }) {
                         Your score is: {snakeLength.current}
                     </Typography>
                     <div className={classes.grow}></div>
-                    <IconButton onClick={changePause} color="inherit">
-                        {pause === 1 ? <PlayArrow /> : <Pause />}
-                    </IconButton>
+                    <Tooltip title="p">
+                        <IconButton onClick={changePause} color="inherit">
+                            {pause === 1 ? <PlayArrow /> : <Pause />}
+                        </IconButton>
+                    </Tooltip>
                 </Toolbar>
             </AppBar>
             <GameTable grid={grid} />

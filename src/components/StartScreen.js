@@ -1,28 +1,28 @@
-import React from 'react'
-import { Typography, makeStyles, CssBaseline, Button } from '@material-ui/core'
+import React from "react";
+import { Typography, makeStyles, CssBaseline, Button } from "@material-ui/core";
 
 const useStyles = makeStyles({
     wrapper: {
-        width: '100vw',
-        height: '100vh',
+        width: "100vw",
+        height: "100vh",
 
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
     },
     main: {
-        margin: 'auto',
+        margin: "auto",
 
-        display: 'flex',
+        display: "flex",
         flexShrink: 1,
-        flexDirection: 'column',
+        flexDirection: "column",
     },
     title: {
-        color: 'red',
+        color: "red",
     },
-})
+});
 
-function StartScreen({ startGame }) {
-    const classes = useStyles()
+function StartScreen({ startGame, startTurbo }) {
+    const classes = useStyles();
 
     return (
         <div className={classes.main}>
@@ -30,10 +30,13 @@ function StartScreen({ startGame }) {
                 Snake
             </Typography>
             <Button variant="contained" onClick={startGame}>
-                Play
+                Play Classic Snake
+            </Button>
+            <Button variant="contained" onClick={startTurbo}>
+                Play Turbo Snake
             </Button>
         </div>
-    )
+    );
 }
 
-export default StartScreen
+export default StartScreen;

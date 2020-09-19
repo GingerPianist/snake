@@ -32,6 +32,7 @@ function App() {
     const classes = useStyles();
     const [currentScreen, setCurrentScreen] = useState("startScreen");
     const [score, setScore] = useState(-1);
+    const [snakeSpeed, setSnakeSpeed] = useState(200);
 
     return (
         <ThemeProvider theme={theme}>
@@ -41,6 +42,10 @@ function App() {
                 {currentScreen === "startScreen" && (
                     <StartScreen
                         startGame={() => setCurrentScreen("gameScreen")}
+                        startTurbo={() => {
+                            setCurrentScreen("gameScreen");
+                            setSnakeSpeed(100);
+                        }}
                     />
                 )}
                 {currentScreen === "gameScreen" && (
@@ -49,12 +54,16 @@ function App() {
                             setScore(realScore);
                             setCurrentScreen("gameOverScreen");
                         }}
+                        snakeSpeed={snakeSpeed}
                     />
                 )}
                 {currentScreen === "gameOverScreen" && (
                     <GameOverScreen
                         score={score}
-                        endGame={() => setCurrentScreen("gameScreen")}
+                        endGame={() => {
+                            setCurrentScreen("startScreen");
+                            setSnakeSpeed(200);
+                        }}
                         showRanking={() => setCurrentScreen("rankingScreen")}
                     />
                 )}
