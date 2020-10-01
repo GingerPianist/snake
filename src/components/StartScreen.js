@@ -21,7 +21,7 @@ const useStyles = makeStyles({
     },
 });
 
-function StartScreen({ startGame, startTurbo }) {
+function StartScreen({ startGame }) {
     const classes = useStyles();
 
     return (
@@ -31,9 +31,6 @@ function StartScreen({ startGame, startTurbo }) {
             </Typography>
             <Button variant="contained" onClick={startGame}>
                 Play Classic Snake
-            </Button>
-            <Button variant="contained" onClick={startTurbo}>
-                Play Turbo Snake
             </Button>
         </div>
     );

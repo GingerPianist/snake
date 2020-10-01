@@ -36,14 +36,16 @@ function RankingScreen({ startGameAgain }) {
                             <TableCell>Ranking</TableCell>
                             <TableCell>Username</TableCell>
                             <TableCell>Best score</TableCell>
+                            <TableCell>Your speed</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {dataTable.map(({ name, score }) => (
+                        {dataTable.map(({ name, score, snakeSpeed }) => (
                             <TableRow>
                                 <TableCell></TableCell>
                                 <TableCell>{name}</TableCell>
                                 <TableCell>{score}</TableCell>
+                                <TableCell>{snakeSpeed}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

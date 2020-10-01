@@ -42,10 +42,6 @@ function App() {
                 {currentScreen === "startScreen" && (
                     <StartScreen
                         startGame={() => setCurrentScreen("gameScreen")}
-                        startTurbo={() => {
-                            setCurrentScreen("gameScreen");
-                            setSnakeSpeed(100);
-                        }}
                     />
                 )}
                 {currentScreen === "gameScreen" && (
@@ -55,16 +51,18 @@ function App() {
                             setCurrentScreen("gameOverScreen");
                         }}
                         snakeSpeed={snakeSpeed}
+                        setSnakeSpeed={setSnakeSpeed}
                     />
                 )}
                 {currentScreen === "gameOverScreen" && (
                     <GameOverScreen
                         score={score}
                         endGame={() => {
-                            setCurrentScreen("startScreen");
+                            setCurrentScreen("gameScreen");
                             setSnakeSpeed(200);
                         }}
                         showRanking={() => setCurrentScreen("rankingScreen")}
+                        snakeSpeed={snakeSpeed}
                     />
                 )}
                 {currentScreen === "rankingScreen" && (

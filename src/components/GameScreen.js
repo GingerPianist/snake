@@ -6,6 +6,8 @@ import {
     Toolbar,
     AppBar,
     Tooltip,
+    Slider,
+    Grid,
 } from "@material-ui/core";
 import { PlayArrow, Pause } from "@material-ui/icons";
 import GameTable from "./GameTable";
@@ -35,7 +37,7 @@ const colors = {
     grid: "lightgrey",
 };
 
-function GameScreen({ gameOver, snakeSpeed }) {
+function GameScreen({ gameOver, snakeSpeed, setSnakeSpeed }) {
     const classes = useStyles();
     const height = 20;
     const width = 40;
@@ -43,7 +45,7 @@ function GameScreen({ gameOver, snakeSpeed }) {
 
     const head = useRef([0, 0]);
     const snakeGrid = useRef([]);
-    const direction = useRef(0);
+    const direction = useRef([0]);
     const snakeLength = useRef(4);
     const apple = useRef([0, 0]);
     const [pause, setPause] = useState(0); //0 - nie ma pauzy 1-jest pauza
@@ -72,13 +74,19 @@ function GameScreen({ gameOver, snakeSpeed }) {
     useEffect(() => {
         let handle;
         if (pause === 0) handle = setInterval(gameTick, snakeSpeed);
-        document.addEventListener("keydown", keyPress);
 
         return () => {
             clearInterval(handle);
+        };
+    }, [pause, snakeSpeed]);
+
+    useEffect(() => {
+        document.addEventListener("keydown", keyPress);
+
+        return () => {
             document.removeEventListener("keydown", keyPress);
         };
-    }, [pause]);
+    }, []);
 
     /*function setCell(row, column, color) {
         //USUNĄĆ TĘ FUNKCJĘ I WŁOŻYĆ JĄ DO GAMETICKA!
@@ -90,7 +98,8 @@ function GameScreen({ gameOver, snakeSpeed }) {
     }*/
 
     function gameTick() {
-        switch (direction.current) {
+        if (direction.current.length > 1) direction.current.shift();
+        switch (direction.current[0]) {
             case 0: //w prawo
                 head.current[1]++;
                 break;
@@ -106,6 +115,7 @@ function GameScreen({ gameOver, snakeSpeed }) {
             default:
                 break;
         }
+
         head.current[0] += height;
         head.current[0] %= height;
 
@@ -182,18 +192,19 @@ function GameScreen({ gameOver, snakeSpeed }) {
     }
 
     function keyPress(event) {
+        let temp = direction.current[direction.current.length - 1];
         switch (event.key) {
             case "ArrowRight":
-                if (direction.current !== 2) direction.current = 0;
+                if (temp !== 2) direction.current.push(0);
                 break;
             case "ArrowUp":
-                if (direction.current !== 3) direction.current = 1;
+                if (temp !== 3) direction.current.push(1);
                 break;
             case "ArrowLeft":
-                if (direction.current !== 0) direction.current = 2;
+                if (temp !== 0) direction.current.push(2);
                 break;
             case "ArrowDown":
-                if (direction.current !== 1) direction.current = 3;
+                if (temp !== 1) direction.current.push(3);
                 break;
             case "p":
                 changePause();
@@ -204,23 +215,47 @@ function GameScreen({ gameOver, snakeSpeed }) {
     }
 
     function changePause() {
-        if (pause === 1) setPause(0);
-        else setPause(1);
+        setPause((oldPause) => (oldPause === 1 ? 0 : 1));
     }
 
     return (
         <div className={classes.main}>
             <AppBar position="static" className={classes.appBar}>
                 <Toolbar className={classes.header}>
-                    <Typography variant="h6">
-                        Your score is: {snakeLength.current}
-                    </Typography>
-                    <div className={classes.grow}></div>
-                    <Tooltip title="p">
-                        <IconButton onClick={changePause} color="inherit">
-                            {pause === 1 ? <PlayArrow /> : <Pause />}
-                        </IconButton>
-                    </Tooltip>
+                    <Grid
+                        container
+                        spacing={2}
+                        justify="space-between"
+                        alignItems="center"
+                    >
+                        <Grid item>
+                            <Typography variant="h6">
+                                Your score is: {snakeLength.current}
+                            </Typography>
+                            {/* <div className={classes.grow}></div>*/}
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Slider
+                                value={snakeSpeed}
+                                onChange={(event, sliderValue) =>
+                                    setSnakeSpeed(sliderValue)
+                                }
+                                valueLabelDisplay="auto"
+                                min={30}
+                                max={500}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Tooltip title="keypress: p">
+                                <IconButton
+                                    onClick={changePause}
+                                    color="inherit"
+                                >
+                                    {pause === 1 ? <PlayArrow /> : <Pause />}
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
             <GameTable grid={grid} />

@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     },
 });
 
-function GameOverScreen({ score, endGame, showRanking }) {
+function GameOverScreen({ score, endGame, showRanking, snakeSpeed }) {
     const classes = useStyles();
     const [username, setUsername] = useState("");
     const [showTextField, setShowTextField] = useState(true);
@@ -32,7 +32,7 @@ function GameOverScreen({ score, endGame, showRanking }) {
         setShowTextField(false);
 
         const ranking = JSON.parse(localStorage.getItem("ranking") || "[]");
-        ranking.push({ name: username, score });
+        ranking.push({ name: username, score, snakeSpeed });
         localStorage.setItem("ranking", JSON.stringify(ranking));
 
         showRanking();
