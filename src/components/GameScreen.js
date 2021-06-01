@@ -1,33 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-    makeStyles,
-    Typography,
-    IconButton,
-    Toolbar,
-    AppBar,
-    Tooltip,
-    Slider,
-    Grid,
-} from "@material-ui/core";
-import { PlayArrow, Pause } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core";
 import GameTable from "./GameTable";
+import GameToolbar from "./GameToolbar";
 import { red, lightGreen } from "@material-ui/core/colors";
 
 const useStyles = makeStyles({
     main: {
         margin: "auto",
-        //textAlign: "center",
-    },
-    header: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    grow: {
-        flexGrow: 1,
-    },
-    appBar: {
-        backgroundColor: red[900],
     },
 });
 
@@ -48,7 +27,7 @@ function GameScreen({ gameOver, snakeSpeed, setSnakeSpeed }) {
     const direction = useRef([0]);
     const snakeLength = useRef(4);
     const apple = useRef([0, 0]);
-    const [pause, setPause] = useState(0); //0 - nie ma pauzy 1-jest pauza
+    const [pause, setPause] = useState(false); //false - nie ma pauzy true-jest pauza
 
     useEffect(() => {
         apple.current[0] = Math.floor(Math.random() * height);
@@ -73,7 +52,7 @@ function GameScreen({ gameOver, snakeSpeed, setSnakeSpeed }) {
 
     useEffect(() => {
         let handle;
-        if (pause === 0) handle = setInterval(gameTick, snakeSpeed);
+        if (pause === false) handle = setInterval(gameTick, snakeSpeed);
 
         return () => {
             clearInterval(handle);
@@ -87,15 +66,6 @@ function GameScreen({ gameOver, snakeSpeed, setSnakeSpeed }) {
             document.removeEventListener("keydown", keyPress);
         };
     }, []);
-
-    /*function setCell(row, column, color) {
-        //USUNĄĆ TĘ FUNKCJĘ I WŁOŻYĆ JĄ DO GAMETICKA!
-        const gridCopy = [...grid];
-        gridCopy[row] = [...gridCopy[row]]; //zmieniamy wskaznik do zmienionego wiersza tak, aby poinformowac Reacta o zmianie wartosci
-        gridCopy[row][column] = color;
-        setGrid(gridCopy);
-        console.log(row, column, color, gridCopy);
-    }*/
 
     function gameTick() {
         if (direction.current.length > 1) direction.current.shift();
@@ -133,20 +103,12 @@ function GameScreen({ gameOver, snakeSpeed, setSnakeSpeed }) {
                         if (snakeGrid.current[i][j] !== 0) {
                             --snakeGrid.current[i][j];
                             if (snakeGrid.current[i][j] === 0) {
-                                gridCopy[i] = [...oldGrid[i]]; //zmieniamy wskaznik do zmienionego wiersza tak, aby poinformowac Reacta o zmianie wartosci
+                                gridCopy[i] = [...oldGrid[i]];
                                 gridCopy[i][j] = colors.grid;
-                                //setGrid(gridCopy);
                             }
                         }
                     }
                 }
-
-                /*
-                1) sprawdź czy głowa === jabłuszko
-                2) zwiększ długość
-                3) zrób nowe jabłuszko w miejscu gdzie nie ma węża
-                4) dodaj nowe jabłuszko
-                */
 
                 snakeGrid.current[head.current[0]][head.current[1]] =
                     snakeLength.current;
@@ -181,9 +143,7 @@ function GameScreen({ gameOver, snakeSpeed, setSnakeSpeed }) {
                     }
                 }
 
-                //setCell(head.current[0], head.current[1], "red");
-                //const gridCopy = [...grid];
-                gridCopy[head.current[0]] = [...gridCopy[head.current[0]]]; //zmieniamy wskaznik do zmienionego wiersza tak, aby poinformowac Reacta o zmianie wartosci
+                gridCopy[head.current[0]] = [...gridCopy[head.current[0]]];
                 gridCopy[head.current[0]][head.current[1]] = colors.snake;
 
                 return gridCopy;
@@ -207,57 +167,26 @@ function GameScreen({ gameOver, snakeSpeed, setSnakeSpeed }) {
                 if (temp !== 1) direction.current.push(3);
                 break;
             case "p":
-                changePause();
+                setPause((oldPause) => !oldPause);
                 break;
             default:
                 break;
         }
     }
 
-    function changePause() {
+    /*function changePause() {
         setPause((oldPause) => (oldPause === 1 ? 0 : 1));
-    }
+    }*/
 
     return (
         <div className={classes.main}>
-            <AppBar position="static" className={classes.appBar}>
-                <Toolbar className={classes.header}>
-                    <Grid
-                        container
-                        spacing={2}
-                        justify="space-between"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <Typography variant="h6">
-                                Your score is: {snakeLength.current}
-                            </Typography>
-                            {/* <div className={classes.grow}></div>*/}
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Slider
-                                value={snakeSpeed}
-                                onChange={(event, sliderValue) =>
-                                    setSnakeSpeed(sliderValue)
-                                }
-                                valueLabelDisplay="auto"
-                                min={30}
-                                max={500}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Tooltip title="keypress: p">
-                                <IconButton
-                                    onClick={changePause}
-                                    color="inherit"
-                                >
-                                    {pause === 1 ? <PlayArrow /> : <Pause />}
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
-                    </Grid>
-                </Toolbar>
-            </AppBar>
+            <GameToolbar
+                pause={pause}
+                setPause={setPause}
+                snakeSpeed={snakeSpeed}
+                setSnakeSpeed={setSnakeSpeed}
+                score={snakeLength.current}
+            />
             <GameTable grid={grid} />
         </div>
     );
