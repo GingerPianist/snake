@@ -1,5 +1,3 @@
-![logo] (/screenshots/logo.png)
-
 # The Snake Game
 
 Polished version of the classic snake game.
