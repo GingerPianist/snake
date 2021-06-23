@@ -22,6 +22,10 @@ To successfully run the app:
         npm start
     ```
 
+### You can also play in browser:
+
+-   https://gingerpianist.github.io/snake/
+
 ## Usage
 
 1. Move using the arrow keys
